@@ -16,4 +16,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("send")?.addEventListener("click", () => {
     window.tn.store.sendData();
   });
+  document.getElementById("add")?.addEventListener("click", () => {
+    window.tn.store.addElement();
+  });
 });

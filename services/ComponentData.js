@@ -11,7 +11,7 @@ export default function getComponentData(type) {
     heightunits: "px",
   };
   if (type === "shape") {
-    componentData.bgcolor = "#000";
+    componentData.bgcolor = "#c194fc";
     componentData.width = 100;
     componentData.height = 100;
     componentData.figure = "rectangle";
