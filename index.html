@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Le petit zero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="zero-header">
+        <div class="zero-header__wrapper">
+            <button class="zero-btn zero-btn_orange zero-btn_rounded" id="add">+</button>
+        </div>
+        <zero-breakpoints></zero-breakpoints>
+        <div class="zero-header__wrapper">
+            <button class="zero-btn zero-btn_orange" id="send">Save</button>
+            <button class="zero-btn">Close</button>
+            <a href="/help" class="zero-btn zero-btn_rounded js-router">?</a>
+            <button class="zero-btn zero-btn_rounded">...</button>
+        </div>
+    </header>
+    <main>
+        <div class="artboard" id="artboard"></div>
+    </main>
+<div class="help-popup disabled" data-section-name="help">
+    <div class="help-popup__wrapper">
+        <a class="popup__close-btn js-router" href="/">x</a>
+        <h1>Zero Block: How to Create a Custom Block</h1>
+        <h3>Part one. Getting started.</h3>
+        <h4>Zero Block is a built-in professional editor that enables you to realize any idea by creating custom-designed blocks according to your own preferences. It is similar to popular graphic design editors but on Tilda.</h4>
+    </div>
+</div>
+
+</body>
+<script src="app.js" type="module"></script>
+</html>
