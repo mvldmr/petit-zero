@@ -8,6 +8,13 @@ export class Breakpoints extends HTMLElement {
     window.addEventListener("breakpoints:data-updated", () => {
       this.render();
     });
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        if (!window.tn.store.getScreenList()) {
+          this.renderError();
+        }
+      }, 5_000);
+    });
   }
 
   render() {
@@ -60,6 +67,11 @@ export class Breakpoints extends HTMLElement {
         window.tn.store.changeResolution(button.dataset.screen);
       });
     });
+  }
+  renderError() {
+    this.shadowRoot.innerHTML = `
+        <div style="display:flex;align-items:center;height:100%;">Данные не были получены</div>
+      `;
   }
 }
 
