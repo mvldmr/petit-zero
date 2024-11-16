@@ -101,6 +101,14 @@ class Store {
   getScreenList() {
     return this.getArboardField("screens");
   }
+  pushScreenToList(screen) {
+    if (this.getScreenList().includes(screen) || !parseInt(screen, 10)) return;
+    const currentList = this.getScreenList();
+    currentList.push(screen);
+    currentList.sort((a, b) => a - b);
+    this.setArtboardField("screens", currentList);
+    window.dispatchEvent(new CustomEvent("breakpoints:data-updated"));
+  }
   processIncomeData(data) {
     Object.keys(data).forEach((key) => {
       if (key.startsWith("ab_")) {

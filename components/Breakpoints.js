@@ -5,14 +5,15 @@ export class Breakpoints extends HTMLElement {
   }
 
   connectedCallback() {
-    window.addEventListener("breakpoints:data-loaded", () => {
+    window.addEventListener("breakpoints:data-updated", () => {
       this.render();
     });
   }
 
   render() {
-    if (window.tn.store.getScreenList()) {
-      this.shadowRoot.innerHTML = `
+    const screenList = window.tn.store.getScreenList();
+    if (!screenList) return;
+    this.shadowRoot.innerHTML = `
         <style>
           .button-wrapper {
           display: flex;
@@ -38,12 +39,9 @@ export class Breakpoints extends HTMLElement {
             }
           }
         </style>
-
-<!--        <link rel="stylesheet" href="components/Breakpoints.css">-->
         
         <div class="button-wrapper">
-        ${window.tn.store
-          .getScreenList()
+        ${screenList
           .map((screen) => {
             const isActivated =
               screen === window.tn.store.getCurrentResolution();
@@ -53,17 +51,15 @@ export class Breakpoints extends HTMLElement {
           .join("")}
         </div>
       `;
-      this.shadowRoot.querySelectorAll("button").forEach((button) => {
-        button.addEventListener("click", () => {
-          if (button.classList.contains("active")) return;
-          this.shadowRoot
-            .querySelectorAll("button")
-            .forEach((btn) => btn.classList.remove("active"));
-          button.classList.add("active");
-          window.tn.store.changeResolution(button.dataset.screen);
-        });
+    const buttons = this.shadowRoot.querySelectorAll("button");
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.classList.contains("active")) return;
+        buttons.forEach((btn) => btn.classList.remove("active"));
+        button.classList.add("active");
+        window.tn.store.changeResolution(button.dataset.screen);
       });
-    }
+    });
   }
 }
 

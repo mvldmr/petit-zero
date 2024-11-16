@@ -10,10 +10,10 @@ window.addEventListener("DOMContentLoaded", () => {
   window.tn.router.init();
   loadData().then((data) => {
     window.tn.store.processIncomeData(data);
-    window.dispatchEvent(new CustomEvent("breakpoints:data-loaded"));
+    window.dispatchEvent(new CustomEvent("breakpoints:data-updated"));
   });
 
-  document.getElementById("send").addEventListener("click", () => {
+  document.getElementById("send")?.addEventListener("click", () => {
     window.tn.store.sendData();
   });
 });
