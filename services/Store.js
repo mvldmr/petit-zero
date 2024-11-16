@@ -1,69 +1,5 @@
-class Component {
-  constructor(data) {
-    Object.keys(data).forEach((key) => {
-      this[key] = data[key];
-    });
-  }
-  setNode() {
-    this.node = document.getElementById(this.elem_id);
-  }
-  renderAllFields() {
-    Object.keys(this).forEach((field) => {
-      if (field === "node") return;
-      this.renderField(field);
-    });
-  }
-  setFieldValue(field, value) {
-    this[field] = value;
-    this.renderField(field);
-  }
-  renderField(field) {
-    if (!this.node) return;
-    if (["left", "top", "width", "height"].includes(field)) {
-      this.node.style[field] = this[field] + "px";
-    } else if (field === "fontsize") {
-      this.node.style.fontSize = this[field] + "px";
-    } else if (field === "bgcolor") {
-      this.node.style.backgroundColor = this[field];
-    } else if (field === "fontfamily") {
-      this.node.style.fontFamily = this[field];
-    } else if (field === "fontweight") {
-      this.node.style.fontWeight = this[field];
-    } else if (field === "lineheight") {
-      this.node.style.lineHeight = this[field];
-    } else if (field === "zindex") {
-      this.node.style.zIndex = this[field];
-    } else {
-      this.node.style[field] = this[field];
-    }
-  }
-}
-
-class TextComponent extends Component {
-  constructor(data) {
-    super(data);
-  }
-  renderField(field) {
-    if (field === "text") {
-      this.node.textContent = this[field];
-    } else {
-      super.renderField(field);
-    }
-  }
-}
-
-class ImageComponent extends Component {
-  constructor(data) {
-    super(data);
-  }
-  renderField(field) {
-    if (field === "img") {
-      this.node.src = this[field];
-    } else {
-      super.renderField(field);
-    }
-  }
-}
+import { Component, TextComponent, ImageComponent } from "./Component.js";
+import getComponentData from "./ComponentData.js";
 
 class Store {
   #artBoard;
@@ -114,7 +50,7 @@ class Store {
       if (key.startsWith("ab_")) {
         this.setArtboardField(key, data[key]);
       } else if (key !== "timestamp") {
-        this.appendComponentToStore(this.createComponent(data[key]));
+        this.appendElement(this.createComponent(data[key]));
       }
     });
     const screenList = this.getScreenList();
@@ -163,22 +99,28 @@ class Store {
   renderState() {
     this.getArtboard().style.backgroundColor = this.getArboardField("bgcolor");
     this.getArtboard().style.height = this.getArboardField("height") + "px";
-    this.getElementsComponents().forEach((elementComponent) => {
-      this.appendElement(elementComponent);
-    });
     this.renderArtboardWidth();
   }
   renderArtboardWidth() {
     this.getArtboard().style.width = this.getCurrentResolution() + "px";
+  }
+  addElement() {
+    const typeList = ["text", "shape", "image"];
+    const newElementData = getComponentData(
+      typeList[Math.floor(Math.random() * typeList.length)]
+    );
+    const newElement = this.createComponent(newElementData);
+    this.appendElement(newElement);
   }
   appendElement(elementComponent) {
     const isImage = elementComponent.elem_type === "image";
     const element = document.createElement(isImage ? "img" : "div");
     element.classList.add("artboard__element");
     element.id = elementComponent.elem_id;
-    this.getArtboard().appendChild(element);
-    elementComponent.setNode();
+    elementComponent.setNode(element);
     elementComponent.renderAllFields();
+    this.getArtboard().appendChild(element);
+    this.appendComponentToStore(elementComponent);
   }
 }
 
