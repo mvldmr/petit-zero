@@ -19,6 +19,7 @@ const Router = {
 
     Router.go(Router.processSearchURL(document.location.search), false);
   },
+  //'http://localhost:63341/petit-zero/index.html?resolution=320';
   go: (route, addToHistory = true) => {
     if (addToHistory) {
       const routeURL = route ? `?=${route}` : document.location.pathname;
@@ -38,8 +39,8 @@ const Router = {
         section.classList.add("disabled");
       });
       Router.listOfSections = [];
-      window.scroll(5255, 4668);
     }
+    window.scroll(5255, 4668);
   },
 };
 
