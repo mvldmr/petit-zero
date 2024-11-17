@@ -5,13 +5,19 @@ export class Breakpoints extends HTMLElement {
     window.addEventListener("breakpoints:data-updated", () => {
       this.setAttribute("screens", window.tn.store.getScreenList().join(", "));
     });
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        if (this.getAttribute("screens")) return;
+        this.render();
+      }, 2_000);
+    });
   }
 
   /**
    * @description This method is called when the component is connected to the DOM.
    */
   connectedCallback() {
-    this.render();
+    // this.render();
   }
 
   /**
@@ -25,23 +31,25 @@ export class Breakpoints extends HTMLElement {
   /**
    * @description This method is called when one of the attributes in the observedAttributes list is changed.
    * @param {'screen'} name
+   * @param {string | null} oldValue
+   * @param {string | null} newValue
    */
-  attributeChangedCallback(name) {
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue || (!oldValue && !newValue)) return;
     if (name === "screens") this.render();
   }
 
   getScreenList() {
     const screenAttribute = this.getAttribute("screens");
     if (!screenAttribute) return [];
-    return screenAttribute.split(", ");
+    return screenAttribute.split(", ").map(Number);
   }
 
   getButtonComponent(screen) {
     const button = document.createElement("button");
     button.textContent = screen;
     button.dataset.screen = screen;
-    const isActive =
-      Number(screen) === Number(window.tn.store.getCurrentResolution());
+    const isActive = screen === Number(window.tn.store.getCurrentResolution());
     if (isActive) button.classList.add("active");
     button.addEventListener("click", () => {
       if (button.classList.contains("active")) return;
@@ -54,10 +62,10 @@ export class Breakpoints extends HTMLElement {
     return button;
   }
 
-  getButtonStyles() {
+  getComponentStyles() {
     const screenList = this.getScreenList();
     if (!screenList.length) {
-      return `<style>p{height: 100%; display: flex; align-items: center;}</style>`;
+      return `<style>p{height: 100%; display: flex; align-items: center; margin:0;}</style>`;
     }
     return `<style>
               .button-wrapper {
@@ -88,8 +96,8 @@ export class Breakpoints extends HTMLElement {
 
   render() {
     this.shadowRoot.innerHTML = `
-        ${this.getButtonStyles()}
-        <div class="button-wrapper"></div>
+        ${this.getComponentStyles()}
+        <div class="button-wrapper" style="height: 100%;"></div>
       `;
 
     const buttonWrapper = this.shadowRoot.querySelector(".button-wrapper");
