@@ -17,6 +17,14 @@ class Store {
   getArtboard() {
     return this.#artBoard;
   }
+  setMainListeners() {
+    document.getElementById("save")?.addEventListener("click", () => {
+      this.sendData();
+    });
+    document.getElementById("add")?.addEventListener("click", () => {
+      this.addElement();
+    });
+  }
   getElementsComponents() {
     return this.#elementsComponent;
   }

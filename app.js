@@ -6,16 +6,10 @@ import Store from "./services/Store.js";
 window.addEventListener("DOMContentLoaded", () => {
   window.tn = {};
   window.tn.store = new Store();
+  window.tn.store.setMainListeners();
   window.tn.router = Router;
   loadData().then((data) => {
     window.tn.store.processIncomeData(data);
     window.tn.router.init();
-  });
-
-  document.getElementById("send")?.addEventListener("click", () => {
-    window.tn.store.sendData();
-  });
-  document.getElementById("add")?.addEventListener("click", () => {
-    window.tn.store.addElement();
   });
 });

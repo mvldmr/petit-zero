@@ -6,6 +6,7 @@ export class Breakpoints extends HTMLElement {
     window.addEventListener("breakpoints:set", () => {
       const { store } = window.tn;
       this.setAttribute("screens", store.getScreenList().join(", "));
+      this.setAttribute("current-resolution", store.getCurrentResolution());
     });
 
     window.addEventListener("breakpoints:set-current-resolution", (event) => {
@@ -92,7 +93,7 @@ export class Breakpoints extends HTMLElement {
                   background-color: #e5e5e5;
                 }
                 &.active {
-                  background: #858484;
+                  background-color: #858484;
                   color: white;
                 }
                 @media (max-width: 1200px) {
