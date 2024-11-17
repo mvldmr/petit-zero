@@ -37,6 +37,7 @@ const Router = {
       Router.listOfSections.forEach((section) => {
         section.classList.add("disabled");
       });
+      Router.listOfSections = [];
       window.scroll(5255, 4668);
     }
   },
