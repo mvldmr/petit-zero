@@ -1,7 +1,7 @@
-import Store from "./services/Store.js";
 import { loadData } from "./services/GetData.js";
-import Router from "./services/Router.js";
 import { Breakpoints } from "./components/Breakpoints.js";
+import Router from "./services/Router.js";
+import Store from "./services/Store.js";
 
 window.addEventListener("DOMContentLoaded", () => {
   window.tn = {};
