@@ -38,6 +38,7 @@ class Store {
   }
   setArtboardField(field, value) {
     this.#artBoardData[field.replace("ab_", "")] = value;
+    this.renderArtboard();
   }
   getArboardField(field) {
     return this.#artBoardData[field];
@@ -64,7 +65,7 @@ class Store {
     const screenList = this.getScreenList();
     this.changeResolution(screenList[screenList.length - 1]); // set default resolution while open page
     window.dispatchEvent(new CustomEvent("breakpoints:set"));
-    this.renderState();
+    this.renderArtboard();
   }
   createComponent(data) {
     if (data.elem_type === "text") {
@@ -79,8 +80,12 @@ class Store {
    * Нам некуда отправлять, поэтому пока выводим в консоль
    */
   sendData() {
+    const artBoardData = {};
+    Object.keys(this.#artBoardData).forEach((key) => {
+      artBoardData["ab_" + key] = this.#artBoardData[key];
+    });
     const data = {
-      ...this.#artBoardData,
+      ...artBoardData,
       ...this.getElementsComponents().reduce((acc, component) => {
         const clonedComponent = { ...component };
         delete clonedComponent.node;
@@ -106,7 +111,7 @@ class Store {
     );
     this.renderArtboardWidth();
   }
-  renderState() {
+  renderArtboard() {
     this.getArtboard().style.backgroundColor = this.getArboardField("bgcolor");
     this.getArtboard().style.height = this.getArboardField("height") + "px";
     this.renderArtboardWidth();
