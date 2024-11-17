@@ -94,8 +94,9 @@ export class Breakpoints extends HTMLElement {
 
     const buttonWrapper = this.shadowRoot.querySelector(".button-wrapper");
     const buttons = this.getScreenList().map(this.getButtonComponent);
-    buttonWrapper.append(...buttons);
-    if (!buttons.length) {
+    if (buttons.length) {
+      buttonWrapper.append(...buttons);
+    } else {
       buttonWrapper.innerHTML = "<p>No breakpoints</p>";
     }
   }
