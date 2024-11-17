@@ -7,10 +7,9 @@ window.addEventListener("DOMContentLoaded", () => {
   window.tn = {};
   window.tn.store = new Store();
   window.tn.router = Router;
-  window.tn.router.init();
   loadData().then((data) => {
     window.tn.store.processIncomeData(data);
-    window.dispatchEvent(new CustomEvent("breakpoints:data-updated"));
+    window.tn.router.init();
   });
 
   document.getElementById("send")?.addEventListener("click", () => {

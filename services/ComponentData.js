@@ -28,7 +28,7 @@ export default function getComponentData(type) {
   if (type === "image") {
     componentData.img = "https://placehold.co/600x400";
     componentData.width = 150;
-    componentData.height = 150;
+    componentData.height = 100;
   }
   return componentData;
 }

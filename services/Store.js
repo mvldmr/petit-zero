@@ -43,7 +43,7 @@ class Store {
     currentList.push(screen);
     currentList.sort((a, b) => a - b);
     this.setArtboardField("screens", currentList);
-    window.dispatchEvent(new CustomEvent("breakpoints:data-updated"));
+    window.dispatchEvent(new CustomEvent("breakpoints:set"));
   }
   processIncomeData(data) {
     Object.keys(data).forEach((key) => {
@@ -54,7 +54,8 @@ class Store {
       }
     });
     const screenList = this.getScreenList();
-    this.changeResolution(screenList[screenList.length - 1]);
+    this.changeResolution(screenList[screenList.length - 1]); // set default resolution while open page
+    window.dispatchEvent(new CustomEvent("breakpoints:set"));
     this.renderState();
   }
   createComponent(data) {
@@ -84,17 +85,18 @@ class Store {
   getCurrentResolution() {
     return this.#currentResolution;
   }
-  setCurrentResolution(value) {
-    this.#currentResolution = value;
-  }
   changeResolution(resolution) {
     const resolutionNumber = Number(resolution);
     if (!resolutionNumber || !this.getScreenList().includes(resolutionNumber)) {
-      return false;
+      return;
     }
-    this.setCurrentResolution(resolution);
+    this.#currentResolution = resolutionNumber;
+    window.dispatchEvent(
+      new CustomEvent("breakpoints:set-current-resolution", {
+        detail: resolutionNumber,
+      })
+    );
     this.renderArtboardWidth();
-    return true;
   }
   renderState() {
     this.getArtboard().style.backgroundColor = this.getArboardField("bgcolor");

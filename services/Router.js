@@ -1,45 +1,30 @@
 const Router = {
-  listOfSections: [],
-  processSearchURL: (searchLine) => {
-    return searchLine.replace("?=", "");
+  getBreakpoint: () => {
+    const params = new URLSearchParams(document.location.search);
+    return Number(params.get("resolution"));
   },
   init: () => {
-    const routes = Array.from(document.querySelectorAll(".js-router"));
-    routes.forEach((routeLink) => {
-      routeLink.addEventListener("click", (e) => {
-        e.preventDefault();
-        const href = e.target.getAttribute("href")?.replace("/", "") || "";
-        Router.go(href);
-      });
+    window.addEventListener("breakpoints:set-current-resolution", (event) => {
+      const resolution = event.detail;
+      const currentBreakpoint = Router.getBreakpoint();
+      if (resolution !== currentBreakpoint) Router.go(resolution, true, false);
     });
 
     window.addEventListener("popstate", () => {
-      Router.go(Router.processSearchURL(document.location.search), false);
+      const resolution = Router.getBreakpoint();
+      Router.go(resolution, false);
     });
 
-    Router.go(Router.processSearchURL(document.location.search), false);
+    Router.go(Router.getBreakpoint() || window.tn.store.getCurrentResolution());
   },
-  //'http://localhost:63341/petit-zero/index.html?resolution=320';
-  go: (route, addToHistory = true) => {
+  go: (resolution, addToHistory = true, needRender = true) => {
     if (addToHistory) {
-      const routeURL = route ? `?=${route}` : document.location.pathname;
+      let routeURL = resolution && `?resolution=${resolution}`;
+      if (!routeURL) routeURL = document.location.pathname;
       history.pushState({}, "", routeURL);
     }
 
-    if (route) {
-      const currentSection = document.querySelector(
-        `[data-section-name="${route}"]`
-      );
-      if (currentSection) {
-        currentSection.classList.remove("disabled");
-        Router.listOfSections.push(currentSection);
-      }
-    } else {
-      Router.listOfSections.forEach((section) => {
-        section.classList.add("disabled");
-      });
-      Router.listOfSections = [];
-    }
+    if (needRender) window.tn.store.changeResolution(resolution);
     window.scroll(5255, 4668);
   },
 };

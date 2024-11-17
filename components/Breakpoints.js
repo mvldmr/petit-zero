@@ -2,9 +2,17 @@ export class Breakpoints extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    window.addEventListener("breakpoints:data-updated", () => {
-      this.setAttribute("screens", window.tn.store.getScreenList().join(", "));
+
+    window.addEventListener("breakpoints:set", () => {
+      const { store } = window.tn;
+      this.setAttribute("screens", store.getScreenList().join(", "));
+      this.setAttribute("current-resolution", store.getCurrentResolution());
     });
+
+    window.addEventListener("breakpoints:set-current-resolution", (event) => {
+      this.setAttribute("current-resolution", event.detail);
+    });
+
     window.addEventListener("load", () => {
       setTimeout(() => {
         if (this.getAttribute("screens")) return;
@@ -25,7 +33,7 @@ export class Breakpoints extends HTMLElement {
    * @returns {string[]}
    */
   static get observedAttributes() {
-    return ["screens"];
+    return ["screens", "current-resolution"];
   }
 
   /**
@@ -35,7 +43,8 @@ export class Breakpoints extends HTMLElement {
    * @param {string | null} newValue
    */
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue || (!oldValue && !newValue)) return;
+    if (name === "current-resolution") this.update();
+    if (!oldValue && !newValue) return;
     if (name === "screens") this.render();
   }
 
@@ -49,15 +58,9 @@ export class Breakpoints extends HTMLElement {
     const button = document.createElement("button");
     button.textContent = screen;
     button.dataset.screen = screen;
-    const isActive = screen === Number(window.tn.store.getCurrentResolution());
-    if (isActive) button.classList.add("active");
     button.addEventListener("click", () => {
       if (button.classList.contains("active")) return;
-      button.parentElement.childNodes.forEach((btn) =>
-        btn.classList.remove("active")
-      );
-      button.classList.add("active");
-      window.tn.store.changeResolution(button.dataset.screen);
+      window.tn.store.changeResolution(screen);
     });
     return button;
   }
@@ -107,6 +110,17 @@ export class Breakpoints extends HTMLElement {
     } else {
       buttonWrapper.innerHTML = "<p>No breakpoints</p>";
     }
+  }
+  update() {
+    const currentResolution = this.getAttribute("current-resolution");
+    const buttons = this.shadowRoot.querySelectorAll("button");
+    buttons.forEach((button) => {
+      if (button.dataset.screen === currentResolution) {
+        button.classList.add("active");
+      } else {
+        button.classList.remove("active");
+      }
+    });
   }
 }
 
