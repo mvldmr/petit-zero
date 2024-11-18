@@ -38,7 +38,7 @@ export class Breakpoints extends HTMLElement {
 
   /**
    * @description This method is called when one of the attributes in the observedAttributes list is changed.
-   * @param {'screen'} name
+   * @param {'screen' | 'current-resolution'} name
    * @param {string | null} oldValue
    * @param {string | null} newValue
    */
