@@ -25,14 +25,14 @@ class Store {
       this.addElement();
     });
   }
-  getElementsComponents() {
+  get elementsComponents() {
     return this.#elementsComponent;
   }
   appendComponentToStore(component) {
-    this.getElementsComponents().push(component);
+    this.elementsComponents.push(component);
   }
   getComponentById(id) {
-    return this.getElementsComponents().find(
+    return this.elementsComponents.find(
       (component) => component.elem_id === id
     );
   }
@@ -82,20 +82,26 @@ class Store {
     return new Component(data);
   }
 
+  deleteLastComponent() {
+    const lastComponent = this.elementsComponents.pop();
+    lastComponent.node.remove();
+  }
+
   /**
    * Нам некуда отправлять, поэтому пока выводим в консоль
    */
   sendData() {
     const artBoardData = {};
     Object.keys(this.#artBoardData).forEach((key) => {
-      if (key === "screen") {
+      if (key === "screens") {
         artBoardData["ab_" + key] = this.stringifyScreenList;
+      } else {
+        artBoardData["ab_" + key] = this.#artBoardData[key];
       }
-      artBoardData["ab_" + key] = this.#artBoardData[key];
     });
     const data = {
       ...artBoardData,
-      ...this.getElementsComponents().reduce((acc, component) => {
+      ...this.elementsComponents.reduce((acc, component) => {
         const clonedComponent = { ...component };
         delete clonedComponent.node;
         acc[component.elem_id] = clonedComponent;
