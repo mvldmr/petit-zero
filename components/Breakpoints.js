@@ -68,7 +68,17 @@ export class Breakpoints extends HTMLElement {
   getComponentStyles() {
     const screenList = this.getScreenList();
     if (!screenList.length) {
-      return `<style>p{height: 100%; display: flex; align-items: center; margin:0;}</style>`;
+      return `<style>
+                p { 
+                  height: 100%;
+                  display: flex;
+                  align-items: center;
+                  margin:0;
+                  @media (prefers-color-scheme: dark) {
+                      color: #e1e1e1;  
+                  }
+                }
+              </style>`;
     }
     return `<style>
               .button-wrapper {
@@ -99,6 +109,18 @@ export class Breakpoints extends HTMLElement {
                 @media (max-width: 1200px) {
                     padding: 4px;
                     font-size: 12px;
+                }
+                @media (prefers-color-scheme: dark) {
+                    background-color: #4b4b4b;
+                    color: #e1e1e1;
+                    border: 1px solid #333;
+                    &:hover {
+                      background-color: #171717;
+                    }
+                    &.active {
+                      background-color: #1f1f1f;
+                      color: #cecdcd;
+                    }
                 }
               }
           </style>`;

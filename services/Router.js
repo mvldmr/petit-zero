@@ -25,7 +25,11 @@ const Router = {
     }
 
     if (needRender) window.tn.store.changeResolution(resolution);
-    window.scroll(5255, 4668);
+    // window.scroll(5255, 4668);
+    window.tn.store.artboard.scrollIntoView({
+      block: "center",
+      inline: "center",
+    });
   },
 };
 

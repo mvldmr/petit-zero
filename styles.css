@@ -1,13 +1,26 @@
+:root {
+	--btn-offset: 11px;
+	--orange: #fa8669;
+	--artboard-width: 1200px;
+	--artboard-height: 550px;
+	@media (prefers-color-scheme: dark) {
+		--orange: #d75835;
+	}
+}
+
 body {
 	font-family: 'Arial', sans-serif;
 	background-color: #eee;
 	margin: 0;
 	padding: 0;
+	@media (prefers-color-scheme: dark) {
+		background-color: rgba(18, 18, 24, 0.85);
+	}
 }
 
 main {
-	width: 12000px;
-	height: 10000px;
+	width: calc(var(--artboard-width) * 10);
+	height: calc(var(--artboard-height) * 10);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -15,10 +28,20 @@ main {
 }
 
 .artboard {
-	width: 1200px;
-	height: 550px;
+	width: var(--artboard-width);
+	height: var(--artboard-height);
 	background-color: white;
 	position: relative;
+	&:has(> .artboard__element) {
+		.no-elements-warning {
+			display: none;
+		}
+	}
+	.no-elements-warning {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+	}
 	.artboard__element {
 		position: absolute;
 		cursor: default;
@@ -40,6 +63,9 @@ main {
 	padding: 7px 8px;
 	box-sizing: border-box;
 	z-index: 100;
+	@media (prefers-color-scheme: dark) {
+		background-color: rgb(0 0 0 / 85%);
+	}
 }
 
 .zero-header__wrapper {
@@ -49,7 +75,7 @@ main {
 .zero-btn {
 	outline: none;
 	border-radius: 20px;
-	padding: 11px 22px;
+	padding: var(--btn-offset) calc(var(--btn-offset) * 2);
 	border: none;
 	background-color: white;
 	color: black;
@@ -60,6 +86,10 @@ main {
 	align-items: center;
 	justify-content: center;
 	text-decoration: none;
+	@media (prefers-color-scheme: dark) {
+		background-color: #100f0f;
+		color: white;
+	}
 }
 
 .zero-btn_rounded {
@@ -69,6 +99,6 @@ main {
 }
 
 .zero-btn_orange {
-	background-color: #fa8669;
+	background-color: var(--orange, orange);
 	color: white;
 }
