@@ -106,6 +106,6 @@
   "ab_bgposition": "center center",
   "ab_valign": "center",
   "ab_upscale": "grid",
-  "ab_screens": [320, 480, 640, 960, 1200],
+  "ab_screens": "320, 480, 640, 960, 1200",
   "timestamp": 1658928353441
 }

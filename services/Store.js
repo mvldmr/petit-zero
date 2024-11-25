@@ -14,7 +14,7 @@ class Store {
     this.#elementsComponent = [];
   }
 
-  getArtboard() {
+  get artboard() {
     return this.#artBoard;
   }
   setMainListeners() {
@@ -37,18 +37,24 @@ class Store {
     );
   }
   setArtboardField(field, value) {
+    if (field.includes("screens") && typeof value === "string") {
+      value = value.split(",").map((item) => parseInt(item, 10));
+    }
     this.#artBoardData[field.replace("ab_", "")] = value;
     this.renderArtboard();
   }
   getArboardField(field) {
     return this.#artBoardData[field];
   }
-  getScreenList() {
+  get screenList() {
     return this.getArboardField("screens");
   }
+  get stringifyScreenList() {
+    return this.screenList.join(", ");
+  }
   pushScreenToList(screen) {
-    if (this.getScreenList().includes(screen) || !parseInt(screen, 10)) return;
-    const currentList = this.getScreenList();
+    if (this.screenList.includes(screen) || !parseInt(screen, 10)) return;
+    const currentList = this.screenList;
     currentList.push(screen);
     currentList.sort((a, b) => a - b);
     this.setArtboardField("screens", currentList);
@@ -62,7 +68,7 @@ class Store {
         this.appendElement(this.createComponent(data[key]));
       }
     });
-    const screenList = this.getScreenList();
+    const screenList = this.screenList;
     this.changeResolution(screenList[screenList.length - 1]); // set default resolution while open page
     window.dispatchEvent(new CustomEvent("breakpoints:set"));
     this.renderArtboard();
@@ -82,6 +88,9 @@ class Store {
   sendData() {
     const artBoardData = {};
     Object.keys(this.#artBoardData).forEach((key) => {
+      if (key === "screen") {
+        artBoardData["ab_" + key] = this.stringifyScreenList;
+      }
       artBoardData["ab_" + key] = this.#artBoardData[key];
     });
     const data = {
@@ -95,12 +104,12 @@ class Store {
     };
     console.log(JSON.stringify(data));
   }
-  getCurrentResolution() {
+  get currentResolution() {
     return this.#currentResolution;
   }
   changeResolution(resolution) {
     const resolutionNumber = Number(resolution);
-    if (!resolutionNumber || !this.getScreenList().includes(resolutionNumber)) {
+    if (!resolutionNumber || !this.screenList.includes(resolutionNumber)) {
       return;
     }
     this.#currentResolution = resolutionNumber;
@@ -112,12 +121,12 @@ class Store {
     this.renderArtboardWidth();
   }
   renderArtboard() {
-    this.getArtboard().style.backgroundColor = this.getArboardField("bgcolor");
-    this.getArtboard().style.height = this.getArboardField("height") + "px";
+    this.artboard.style.backgroundColor = this.getArboardField("bgcolor");
+    this.artboard.style.height = this.getArboardField("height") + "px";
     this.renderArtboardWidth();
   }
   renderArtboardWidth() {
-    this.getArtboard().style.width = this.getCurrentResolution() + "px";
+    this.artboard.style.width = this.currentResolution + "px";
   }
   addElement() {
     const typeList = ["text", "shape", "image"];
@@ -134,7 +143,7 @@ class Store {
     element.id = elementComponent.elem_id;
     elementComponent.setNode(element);
     elementComponent.renderAllFields();
-    this.getArtboard().appendChild(element);
+    this.artboard.appendChild(element);
     this.appendComponentToStore(elementComponent);
   }
 }

@@ -5,8 +5,8 @@ export class Breakpoints extends HTMLElement {
 
     window.addEventListener("breakpoints:set", () => {
       const { store } = window.tn;
-      this.setAttribute("screens", store.getScreenList().join(", "));
-      this.setAttribute("current-resolution", store.getCurrentResolution());
+      this.setAttribute("screens", store.stringifyScreenList);
+      this.setAttribute("current-resolution", store.currentResolution);
     });
 
     window.addEventListener("breakpoints:set-current-resolution", (event) => {

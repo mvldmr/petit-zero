@@ -15,7 +15,7 @@ const Router = {
       Router.go(resolution, false);
     });
 
-    Router.go(Router.getBreakpoint() || window.tn.store.getCurrentResolution());
+    Router.go(Router.getBreakpoint() || window.tn.store.currentResolution);
   },
   go: (resolution, addToHistory = true, needRender = true) => {
     if (addToHistory) {
